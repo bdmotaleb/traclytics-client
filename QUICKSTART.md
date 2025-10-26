@@ -6,7 +6,7 @@ Get started with Traclytics in 5 minutes or less!
 
 ### 1. Install the Package
 ```bash
-composer require bdmotaleb/event-api-client
+composer require bdmotaleb/traclytics-client
 ```
 
 ### 2. Publish Configuration (Optional)
@@ -42,7 +42,7 @@ That's it! 🎉 Your events are now being tracked.
 
 ### 1. Install the Package
 ```bash
-composer require bdmotaleb/event-api-client
+composer require bdmotaleb/traclytics-client
 ```
 
 ### 2. Autoload Classes
@@ -162,7 +162,7 @@ You only need to provide:
 ## Need More Help?
 
 - 📚 [Full Documentation](README.md)
-- 🐛 [Report Issues](https://github.com/bdmotaleb/event-api-client/issues)
+- 🐛 [Report Issues](https://github.com/bdmotaleb/traclytics-client/issues)
 
 ---
 

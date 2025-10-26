@@ -1,5 +1,5 @@
 {
-    "name": "bdmotaleb/event-api-client",
+    "name": "bdmotaleb/traclytics-client",
     "description": "Lightweight PHP client for Traclytics API",
     "type": "library",
     "license": "MIT",
@@ -10,10 +10,10 @@
             "email": "bdmotaleb33@gmail.com"
         }
     ],
-    "homepage": "https://github.com/bdmotaleb/event-api-client",
+    "homepage": "https://github.com/bdmotaleb/traclytics-client",
     "support": {
-        "issues": "https://github.com/bdmotaleb/event-api-client/issues",
-        "source": "https://github.com/bdmotaleb/event-api-client"
+        "issues": "https://github.com/bdmotaleb/traclytics-client/issues",
+        "source": "https://github.com/bdmotaleb/traclytics-client"
     },
     "autoload": {
         "psr-4": {

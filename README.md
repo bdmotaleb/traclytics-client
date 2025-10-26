@@ -1,4 +1,4 @@
-## bdmotaleb/event-api-client (PHP)
+## Traclytics Client
 
 Lightweight PHP client for Traclytics API with Laravel support. Uses ext-curl. No extra dependencies.
 
@@ -13,7 +13,7 @@ Lightweight PHP client for Traclytics API with Laravel support. Uses ext-curl. N
 
 ### Install
 ```bash
-composer require bdmotaleb/event-api-client
+composer require bdmotaleb/traclytics-client
 ```
 
 ### Configuration
@@ -210,7 +210,7 @@ composer test-coverage
 
 ### Support
 
-- **Issues:** https://github.com/bdmotaleb/event-api-client/issues
+- **Issues:** https://github.com/bdmotaleb/traclytics-client/issues
 
 ### License
 
