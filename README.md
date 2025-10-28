@@ -22,12 +22,7 @@ composer require bdmotaleb/traclytics-client
 
 The package uses Laravel's auto-discovery feature and is automatically registered.
 
-**Step 1:** (Optional) Publish the configuration file
-```bash
-php artisan vendor:publish --provider="Traclytics\TraclyticsServiceProvider"
-```
-
-**Step 2:** Configure your environment variables in `.env`:
+**Step 1:** Configure your environment variables in `.env`:
 ```env
 # Required
 TRACLYTICS_PROJECT_KEY=your-project-key
@@ -36,6 +31,11 @@ TRACLYTICS_ACCESS_TOKEN=your-access-token
 TRACLYTICS_USER_ID_KEY=user_id
 TRACLYTICS_IS_HRIS=false
 TRACLYTICS_DEPARTMENT_KEY=department
+```
+
+**Step 2:** (Optional) Publish the configuration file
+```bash
+php artisan vendor:publish --provider="Traclytics\TraclyticsServiceProvider"
 ```
 
 **Step 3:** (Optional) Customize `config/traclytics.php` for advanced configuration.
@@ -66,7 +66,8 @@ use Traclytics\Facades\Traclytics;
 // In a controller or route
 Route::get('/track', function () {
     return Traclytics::track([
-        'event_type' => 'page_view',
+        'event_type' => 'PGW-Report',
+        'action_type' => 'view',
         'details' => [
             'page_name' => 'dashboard',
             'role' => 'admin',
@@ -81,6 +82,7 @@ Route::get('/track', function () {
 // Track in one line - defaults are auto-populated
 traclytics_track([
     'event_type' => 'button_clicked',
+    'action_type' => 'click',
     'details' => [
         'button_name' => 'subscribe',
         'location' => 'header',
@@ -98,8 +100,10 @@ use Traclytics\Traclytics;
 // Track events anywhere
 Traclytics::track([
     'event_type' => 'user_login',
+    'action_type' => 'authentication',
     'details' => [
         'login_method' => 'email',
+        'location' => 'New York',       
     ],
 ]);
 ```

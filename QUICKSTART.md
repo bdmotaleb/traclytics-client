@@ -17,8 +17,12 @@ php artisan vendor:publish --tag=traclytics-config
 ### 3. Add Environment Variables
 Add these to your `.env` file:
 ```env
-TRACLYTICS_PROJECT_KEY=your-project-key-here
-TRACLYTICS_ACCESS_TOKEN=your-access-token-here
+TRACLYTICS_PROJECT_KEY=your-project-key
+TRACLYTICS_ACCESS_TOKEN=your-access-token
+
+TRACLYTICS_USER_ID_KEY=user_id
+TRACLYTICS_IS_HRIS=false
+TRACLYTICS_DEPARTMENT_KEY=department
 ```
 
 ### 4. Start Tracking Events
@@ -28,6 +32,7 @@ use Traclytics\Facades\Traclytics;
 // In any controller, route, or service
 Traclytics::track([
     'event_type' => 'user_login',
+    'action_type' => 'authentication',
     'details' => [
         'method' => 'email',
     ]
@@ -73,6 +78,7 @@ Traclytics::configure([
 // Track events
 Traclytics::track([
     'event_type' => 'user_login',
+    'action_type' => 'authentication',
     'details' => [
         'method' => 'email',
     ]
