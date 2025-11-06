@@ -1,8 +1,8 @@
-## Traclytics Client
+# Traclytics Client
 
 Lightweight PHP client for Traclytics API with Laravel support. Uses ext-curl. No extra dependencies.
 
-### Features
+## Features
 - ✅ Simple and lightweight
 - ✅ Laravel Service Provider with auto-discovery
 - ✅ Configurable via environment variables or config files
@@ -11,20 +11,23 @@ Lightweight PHP client for Traclytics API with Laravel support. Uses ext-curl. N
 - ✅ Automatic retry logic with exponential backoff
 - ✅ Works with Laravel and plain PHP
 
-### Install
+## Quick Start
+
+### Laravel Quick Start
+
+#### 1. Install the Package
 ```bash
 composer require bdmotaleb/traclytics-client
 ```
 
-### Configuration
+#### 2. Publish Configuration (Optional)
+```bash
+php artisan vendor:publish --provider="Traclytics\TraclyticsServiceProvider"
+```
 
-#### For Laravel Applications
-
-The package uses Laravel's auto-discovery feature and is automatically registered.
-
-**Step 1:** Configure your environment variables in `.env`:
+#### 3. Add Environment Variables
+Add these to your `.env` file:
 ```env
-# Required
 TRACLYTICS_PROJECT_KEY=your-project-key
 TRACLYTICS_ACCESS_TOKEN=your-access-token
 
@@ -33,37 +36,76 @@ TRACLYTICS_IS_HRIS=false
 TRACLYTICS_DEPARTMENT_KEY=department
 ```
 
-**Step 2:** (Optional) Publish the configuration file
-```bash
-php artisan vendor:publish --provider="Traclytics\TraclyticsServiceProvider"
-```
-
-**Step 3:** (Optional) Customize `config/traclytics.php` for advanced configuration.
-
-#### For Plain PHP Applications
-
-Set environment variables (recommended):
-```env
-PROJECT_KEY="your-project-key"
-ACCESS_TOKEN="your-access-token"
-```
-
-**Requirements:** Ensure PHP extensions are enabled: `ext-curl`, `ext-json`.
-
-After installing, if you add this package to an existing app, run:
-```bash
-composer dump-autoload
-```
-
-### Usage
-
-#### Laravel Usage
-
-**Using the Facade (Recommended):**
+#### 4. Start Tracking Events
 ```php
 use Traclytics\Facades\Traclytics;
 
-// In a controller or route
+// In any controller, route, or service
+Traclytics::track([
+    'event_type' => 'user_login',
+    'action_type' => 'authentication',
+    'details' => [
+        'method' => 'email',
+    ]
+]);
+```
+
+That's it! 🎉 Your events are now being tracked.
+
+---
+
+### Plain PHP Quick Start
+
+#### 1. Install the Package
+```bash
+composer require bdmotaleb/traclytics-client
+composer dump-autoload
+```
+
+#### 2. Set Environment Variables
+Create a `.env` file or set environment variables:
+```env
+PROJECT_KEY=your-project-key-here
+ACCESS_TOKEN=your-access-token-here
+```
+
+#### 3. Start Tracking Events
+```php
+<?php
+require_once 'vendor/autoload.php';
+
+use Traclytics\Traclytics;
+
+// Configure once
+Traclytics::configure([
+    'projectKey' => getenv('PROJECT_KEY'),
+    'accessToken' => getenv('ACCESS_TOKEN'),
+]);
+
+// Track events
+Traclytics::track([
+    'event_type' => 'user_login',
+    'action_type' => 'authentication',
+    'details' => [
+        'method' => 'email',
+    ]
+]);
+```
+
+That's it! 🎉 Your events are now being tracked.
+
+**Requirements:** PHP extensions: `ext-curl`, `ext-json`.
+
+---
+
+## Usage Examples
+
+### Laravel Usage
+
+#### Using the Facade (Recommended):
+```php
+use Traclytics\Facades\Traclytics;
+
 Route::get('/track', function () {
     return Traclytics::track([
         'event_type' => 'PGW-Report',
@@ -77,9 +119,8 @@ Route::get('/track', function () {
 });
 ```
 
-**Using the Helper Function:**
+#### Using the Helper Function:
 ```php
-// Track in one line - defaults are auto-populated
 traclytics_track([
     'event_type' => 'button_clicked',
     'action_type' => 'click',
@@ -90,25 +131,9 @@ traclytics_track([
 ]);
 ```
 
-#### Plain PHP Usage
+### Plain PHP Usage
 
-**Using Static Class:**
-```php
-<?php
-use Traclytics\Traclytics;
-
-// Track events anywhere
-Traclytics::track([
-    'event_type' => 'user_login',
-    'action_type' => 'authentication',
-    'details' => [
-        'login_method' => 'email',
-        'location' => 'New York',       
-    ],
-]);
-```
-
-**Using Client Instance:**
+#### Using Client Instance:
 ```php
 <?php
 use Traclytics\TraclyticsClient;
@@ -134,37 +159,67 @@ $result = $client->trackEvent([
 ]);
 ```
 
-### Configuration Options
+## Configuration Options
 
-#### `userIdKey` (default: 'user_id')
-Specifies which field to use for user identification. Useful when your user model uses a different field name.
+### Basic Configuration (Required)
+```env
+TRACLYTICS_PROJECT_KEY=your-project-key
+TRACLYTICS_ACCESS_TOKEN=your-access-token
+```
+
+### Advanced Configuration
+
+#### Custom User ID Field
+If your user model uses `employee_id` instead of `user_id`:
+```env
+TRACLYTICS_USER_ID_KEY=employee_id
+```
 
 **Examples:**
 - `'user_id'` - Standard Laravel/PHP user ID
 - `'employee_id'` - For HR/employee systems
 - `'emp_no'` - Custom employee number
 
-#### `isHris` (required)
-Enable HRIS (Human Resources Information System) mode to automatically track department information with each event.
-
-**Values:**
-- `true` - Enable HRIS mode (tracks department information)
-- `false` - Disable HRIS mode (standard tracking)
+#### HRIS Mode (HR Applications)
+Automatically track department information:
+```env
+TRACLYTICS_IS_HRIS=true
+TRACLYTICS_DEPARTMENT_KEY=department
+```
 
 **When to use:**
 - HR applications
 - Employee management systems
 - Any application that needs to track user departments
 
-#### `departmentKey` (required)
-Specifies which field contains the department information. Only used when `isHris` is enabled.
-
-**Examples:**
+**Department Key Examples:**
 - `'department'` - Standard department field
 - `'dept'` - Abbreviated department field
 - `'department_id'` - Department ID reference
 - `'dept_code'` - Department code
-### Error Handling
+
+#### Retry and Timeout Settings
+```env
+TRACLYTICS_MAX_RETRIES=3
+TRACLYTICS_TIMEOUT_MS=10000
+```
+
+## What Gets Tracked Automatically?
+
+The client automatically includes:
+- ✅ **User ID** - Detected from Laravel Auth or session (configurable via `user_id_key`)
+- ✅ **Platform** - Operating system (Windows, MacOS, Linux, Android, iOS)
+- ✅ **Device** - Device type (Desktop, Mobile, Tablet)
+- ✅ **Browser** - Browser name (Chrome, Firefox, Safari, Edge, etc.)
+- ✅ **Department** - User's department (when `is_hris` is enabled)
+- ✅ **Timestamp** - Event occurrence time
+
+You only need to provide:
+- Event type (`event_type`)
+- Action type (`action_type`)
+- Custom details (`details`)
+
+## Error Handling
 
 The client returns a standardized response format:
 
@@ -189,18 +244,7 @@ The client returns a standardized response format:
 }
 ```
 
-### Automatic Features
-
-The client automatically includes the following information with each tracked event:
-
-- **User ID** - Detected from Laravel Auth or session (configurable via `user_id_key`)
-- **Platform** - Operating system (Windows, MacOS, Linux, Android, iOS)
-- **Device** - Device type (Desktop, Mobile, Tablet)
-- **Browser** - Browser name (Chrome, Firefox, Safari, Edge, etc.)
-- **Department** - User's department (when `is_hris` is enabled)
-- **Timestamp** - Event occurrence time
-
-### Testing
+## Testing
 
 Run the test suite:
 ```bash
@@ -212,10 +256,11 @@ Run with coverage:
 composer test-coverage
 ```
 
-### Support
+## Support
 
 - **Issues:** https://github.com/bdmotaleb/traclytics-client/issues
+- **Source:** https://github.com/bdmotaleb/traclytics-client
 
-### License
+## License
 
 MIT License - see LICENSE file for details
