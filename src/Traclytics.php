@@ -17,9 +17,21 @@ class Traclytics
     public static function configure(array $options = []): void
     {
         $baseUrl = 'https://traclytics-api.sslwireless.com/api/v1';
-        $projectKey = $options['projectKey'] ?? (getenv('PROJECT_KEY') ?: '');
-        $accessToken = $options['accessToken'] ?? (getenv('ACCESS_TOKEN') ?: '');
+        $projectKey = $options['projectKey'] ?? (getenv('TRACLYTICS_PROJECT_KEY') ?: '');
+        $accessToken = $options['accessToken'] ?? (getenv('TRACLYTICS_ACCESS_TOKEN') ?: '');
         $clientOptions = $options['clientOptions'] ?? [];
+
+        // Read client options from environment variables if not provided
+        if (!isset($clientOptions['userIdKey'])) {
+            $clientOptions['userIdKey'] = getenv('TRACLYTICS_USER_ID_KEY') ?: 'user_id';
+        }
+        if (!isset($clientOptions['isHris'])) {
+            $isHrisEnv = getenv('TRACLYTICS_IS_HRIS');
+            $clientOptions['isHris'] = $isHrisEnv !== false ? filter_var($isHrisEnv, FILTER_VALIDATE_BOOLEAN) : false;
+        }
+        if (!isset($clientOptions['departmentKey'])) {
+            $clientOptions['departmentKey'] = getenv('TRACLYTICS_DEPARTMENT_KEY') ?: 'department';
+        }
 
         self::$client = new TraclyticsClient($baseUrl, $projectKey, $accessToken, $clientOptions);
     }

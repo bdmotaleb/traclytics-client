@@ -65,8 +65,13 @@ composer dump-autoload
 #### 2. Set Environment Variables
 Create a `.env` file or set environment variables:
 ```env
-PROJECT_KEY=your-project-key-here
-ACCESS_TOKEN=your-access-token-here
+TRACLYTICS_PROJECT_KEY=your-project-key-here
+TRACLYTICS_ACCESS_TOKEN=your-access-token-here
+
+# Optional - defaults shown
+TRACLYTICS_USER_ID_KEY=user_id
+TRACLYTICS_IS_HRIS=false
+TRACLYTICS_DEPARTMENT_KEY=department
 ```
 
 #### 3. Start Tracking Events
@@ -76,10 +81,16 @@ require_once 'vendor/autoload.php';
 
 use Traclytics\Traclytics;
 
-// Configure once
+// Configure once - options are optional if using environment variables
 Traclytics::configure([
-    'projectKey' => getenv('PROJECT_KEY'),
-    'accessToken' => getenv('ACCESS_TOKEN'),
+    'projectKey' => getenv('TRACLYTICS_PROJECT_KEY'),
+    'accessToken' => getenv('TRACLYTICS_ACCESS_TOKEN'),
+    // Optional: override defaults via clientOptions
+    // 'clientOptions' => [
+    //     'userIdKey' => 'user_id',
+    //     'isHris' => false,
+    //     'departmentKey' => 'department',
+    // ]
 ]);
 
 // Track events
@@ -176,21 +187,24 @@ TRACLYTICS_USER_ID_KEY=employee_id
 ```
 
 **Examples:**
-- `'user_id'` - Standard Laravel/PHP user ID
+- `'user_id'` - Standard Laravel/PHP user ID (default)
 - `'employee_id'` - For HR/employee systems
 - `'emp_no'` - Custom employee number
 
 #### HRIS Mode (HR Applications)
-Automatically track department information:
+HRIS mode determines how department information is handled:
+
+- **When HRIS mode is disabled** (`TRACLYTICS_IS_HRIS=false`, default): The client automatically detects and tracks department information from your application (Laravel Auth or session).
+- **When HRIS mode is enabled** (`TRACLYTICS_IS_HRIS=true`): Department information is handled on the server side by the Traclytics API.
+
 ```env
-TRACLYTICS_IS_HRIS=true
+TRACLYTICS_IS_HRIS=false  # Client-side department tracking (default)
 TRACLYTICS_DEPARTMENT_KEY=department
 ```
 
 **When to use:**
-- HR applications
-- Employee management systems
-- Any application that needs to track user departments
+- Set `TRACLYTICS_IS_HRIS=false` (default) when you want the client to automatically detect and send department information
+- Set `TRACLYTICS_IS_HRIS=true` when department information should be handled server-side by the Traclytics API
 
 **Department Key Examples:**
 - `'department'` - Standard department field
@@ -204,6 +218,13 @@ TRACLYTICS_MAX_RETRIES=3
 TRACLYTICS_TIMEOUT_MS=10000
 ```
 
+**Default Values:**
+- `userIdKey`: `'user_id'`
+- `isHris`: `false` (client-side department tracking enabled)
+- `departmentKey`: `'department'`
+- `maxRetries`: `3`
+- `timeoutMs`: `10000`
+
 ## What Gets Tracked Automatically?
 
 The client automatically includes:
@@ -211,8 +232,10 @@ The client automatically includes:
 - ✅ **Platform** - Operating system (Windows, MacOS, Linux, Android, iOS)
 - ✅ **Device** - Device type (Desktop, Mobile, Tablet)
 - ✅ **Browser** - Browser name (Chrome, Firefox, Safari, Edge, etc.)
-- ✅ **Department** - User's department (when `is_hris` is enabled)
+- ✅ **Department** - User's department (automatically detected when `TRACLYTICS_IS_HRIS=false`, which is the default. When `TRACLYTICS_IS_HRIS=true`, department is handled server-side)
 - ✅ **Timestamp** - Event occurrence time
+
+**Note:** All configuration options have sensible defaults, so you only need to set them if you want to override the defaults.
 
 You only need to provide:
 - Event type (`event_type`)

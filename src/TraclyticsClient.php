@@ -42,8 +42,8 @@ class TraclyticsClient
         $this->maxDelayMs     = max(0, $options['maxDelayMs'] ?? 8000);
         $this->timeoutMs      = max(1000, $options['timeoutMs'] ?? 10000);
         $this->userIdKey      = $options['userIdKey'] ?? 'user_id';
-        $this->isHris         = $options['isHris'];
-        $this->departmentKey  = $options['departmentKey'];
+        $this->isHris         = $options['isHris'] ?? false;
+        $this->departmentKey  = $options['departmentKey'] ?? 'department';
     }
 
     /**
@@ -76,7 +76,8 @@ class TraclyticsClient
             'department'  => null,
         ];
 
-        // Add department if HRIS mode is enabled
+        // Add department if HRIS mode is disabled
+        // If HRIS mode is enabled, department gets on the server side
         if (!$this->isHris) {
             $department             = $this->detectDepartment();
             $defaults['department'] = $department;
