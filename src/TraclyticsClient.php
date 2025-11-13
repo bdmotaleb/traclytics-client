@@ -306,7 +306,7 @@ class TraclyticsClient
                 CURLOPT_FOLLOWLOCATION => false,
                 CURLOPT_SSL_VERIFYPEER => true,
                 CURLOPT_SSL_VERIFYHOST => 2,
-                CURLOPT_USERAGENT      => 'TraclyticsClient/1.0.0',
+                CURLOPT_USERAGENT      => 'TraclyticsClient/1.1.0',
             ]);
             if ($body !== null) {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
