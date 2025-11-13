@@ -4,7 +4,8 @@ namespace Traclytics;
 
 class Traclytics
 {
-    private static ?TraclyticsClient $client = null;
+    /** @var TraclyticsClient|null */
+    private static $client = null;
 
     /**
      * Configure a shared client instance. If not called, env vars are used lazily.
@@ -14,7 +15,7 @@ class Traclytics
      *   'clientOptions' => array
      * ]
      */
-    public static function configure(array $options = []): void
+    public static function configure(array $options = [])
     {
         $baseUrl = 'https://traclytics-api.sslwireless.com/api/v1';
         $projectKey = $options['projectKey'] ?? (getenv('TRACLYTICS_PROJECT_KEY') ?: '');
@@ -43,7 +44,7 @@ class Traclytics
     /**
      * Manually set the shared client instance.
      */
-    public static function using(TraclyticsClient $client): void
+    public static function using(TraclyticsClient $client)
     {
         self::$client = $client;
     }

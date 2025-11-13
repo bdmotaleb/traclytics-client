@@ -6,7 +6,7 @@ if (!function_exists('traclytics_config')) {
     /**
      * Configure the shared Traclytics client (optional; defaults use env vars).
      */
-    function traclytics_config(array $options = []): void
+    function traclytics_config(array $options = [])
     {
         Traclytics::configure($options);
     }

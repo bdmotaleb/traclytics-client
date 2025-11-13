@@ -4,18 +4,30 @@ namespace Traclytics;
 
 class TraclyticsClient
 {
-    private string $baseUrl;
-    private string $projectKey;
-    private string $accessToken;
-    private int    $maxRetries;
-    private int    $initialDelayMs;
-    private float  $backoffFactor;
-    private int    $maxDelayMs;
-    private int    $timeoutMs;
-    private string $userIdKey;
-    private bool   $isHris;
-    private string $departmentKey;
-    private bool   $isEnabled;
+    /** @var string */
+    private $baseUrl;
+    /** @var string */
+    private $projectKey;
+    /** @var string */
+    private $accessToken;
+    /** @var int */
+    private $maxRetries;
+    /** @var int */
+    private $initialDelayMs;
+    /** @var float */
+    private $backoffFactor;
+    /** @var int */
+    private $maxDelayMs;
+    /** @var int */
+    private $timeoutMs;
+    /** @var string */
+    private $userIdKey;
+    /** @var bool */
+    private $isHris;
+    /** @var string */
+    private $departmentKey;
+    /** @var bool */
+    private $isEnabled;
 
     public function __construct(
         string $baseUrl,
@@ -184,8 +196,10 @@ class TraclyticsClient
      * Detect the authenticated user ID
      * Supports Laravel Auth, session-based auth, and custom implementations
      * Returns null if no authenticated user is found
+     *
+     * @return string|null
      */
-    private function detectUserId(): ?string
+    private function detectUserId()
     {
         // Try Laravel Auth facade (if available)
         if (class_exists('\Illuminate\Support\Facades\Auth')) {
@@ -235,8 +249,10 @@ class TraclyticsClient
      * Detect the user's department
      * Only used when HRIS mode is enabled
      * Returns null if no department is found
+     *
+     * @return string|null
      */
-    private function detectDepartment(): ?string
+    private function detectDepartment()
     {
         // Try Laravel Auth facade (if available)
         if (class_exists('\Illuminate\Support\Facades\Auth')) {
@@ -262,9 +278,12 @@ class TraclyticsClient
     }
 
     /**
+     * @param string $url
+     * @param string $method
+     * @param string|null $body
      * @return array<string, mixed>
      */
-    private function requestWithRetry(string $url, string $method, ?string $body = null): array
+    private function requestWithRetry(string $url, string $method, $body = null)
     {
         $attempt = 0;
         $delay   = $this->initialDelayMs;

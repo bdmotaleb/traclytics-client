@@ -9,7 +9,7 @@ class TraclyticsServiceProvider extends ServiceProvider
     /**
      * Register services.
      */
-    public function register(): void
+    public function register()
     {
         // Merge package config with app config
         $this->mergeConfigFrom(
@@ -52,7 +52,7 @@ class TraclyticsServiceProvider extends ServiceProvider
     /**
      * Bootstrap services.
      */
-    public function boot(): void
+    public function boot()
     {
         // Publish the configuration file
         $this->publishes([
