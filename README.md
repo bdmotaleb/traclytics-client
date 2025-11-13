@@ -34,6 +34,7 @@ TRACLYTICS_ACCESS_TOKEN=your-access-token
 TRACLYTICS_USER_ID_KEY=user_id
 TRACLYTICS_IS_HRIS=false
 TRACLYTICS_DEPARTMENT_KEY=department
+TRACLYTICS_IS_ENABLE=true
 ```
 
 #### 4. Start Tracking Events
@@ -72,6 +73,7 @@ TRACLYTICS_ACCESS_TOKEN=your-access-token-here
 TRACLYTICS_USER_ID_KEY=user_id
 TRACLYTICS_IS_HRIS=false
 TRACLYTICS_DEPARTMENT_KEY=department
+TRACLYTICS_IS_ENABLE=true
 ```
 
 #### 3. Start Tracking Events
@@ -178,6 +180,18 @@ TRACLYTICS_PROJECT_KEY=your-project-key
 TRACLYTICS_ACCESS_TOKEN=your-access-token
 ```
 
+### Enable/Disable Tracking
+Control whether events are sent to the Traclytics API:
+```env
+TRACLYTICS_IS_ENABLE=true   # Enable tracking (default)
+TRACLYTICS_IS_ENABLE=false  # Disable tracking - events will be silently ignored
+```
+
+**Use Cases:**
+- Set to `false` in development or staging environments to prevent test events from being tracked
+- Set to `true` in production to enable tracking
+- When disabled, all `track()` calls will return a success response without sending events to the API
+
 ### Advanced Configuration
 
 #### Custom User ID Field
@@ -222,6 +236,7 @@ TRACLYTICS_TIMEOUT_MS=10000
 - `userIdKey`: `'user_id'`
 - `isHris`: `false` (client-side department tracking enabled)
 - `departmentKey`: `'department'`
+- `isEnabled`: `true` (tracking enabled by default)
 - `maxRetries`: `3`
 - `timeoutMs`: `10000`
 

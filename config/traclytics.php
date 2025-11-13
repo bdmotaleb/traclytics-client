@@ -91,6 +91,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Enable/Disable Tracking
+    |--------------------------------------------------------------------------
+    |
+    | Controls whether events should be sent to the Traclytics API.
+    | When set to false, tracking calls will be silently ignored.
+    | This is useful for disabling tracking in development or staging environments.
+    |
+    | Set to true to enable tracking, false to disable.
+    |
+    */
+
+    'is_enabled' => env('TRACLYTICS_IS_ENABLE', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Client Options
     |--------------------------------------------------------------------------
     |

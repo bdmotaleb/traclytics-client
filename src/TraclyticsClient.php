@@ -15,6 +15,7 @@ class TraclyticsClient
     private string $userIdKey;
     private bool   $isHris;
     private string $departmentKey;
+    private bool   $isEnabled;
 
     public function __construct(
         string $baseUrl,
@@ -44,6 +45,7 @@ class TraclyticsClient
         $this->userIdKey      = $options['userIdKey'] ?? 'user_id';
         $this->isHris         = $options['isHris'] ?? false;
         $this->departmentKey  = $options['departmentKey'] ?? 'department';
+        $this->isEnabled      = $options['isEnabled'] ?? true;
     }
 
     /**
@@ -63,6 +65,16 @@ class TraclyticsClient
      */
     public function trackEvent(array $payload): array
     {
+        // If tracking is disabled, return early without sending the event
+        if (!$this->isEnabled) {
+            return [
+                'status'  => 'success',
+                'code'    => 200,
+                'data'    => null,
+                'message' => 'Event tracking is disabled',
+            ];
+        }
+
         $url = $this->baseUrl . '/events';
 
         // Set defaults for common fields

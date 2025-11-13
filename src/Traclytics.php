@@ -32,6 +32,10 @@ class Traclytics
         if (!isset($clientOptions['departmentKey'])) {
             $clientOptions['departmentKey'] = getenv('TRACLYTICS_DEPARTMENT_KEY') ?: 'department';
         }
+        if (!isset($clientOptions['isEnabled'])) {
+            $isEnabledEnv = getenv('TRACLYTICS_IS_ENABLE');
+            $clientOptions['isEnabled'] = $isEnabledEnv !== false ? filter_var($isEnabledEnv, FILTER_VALIDATE_BOOLEAN) : true;
+        }
 
         self::$client = new TraclyticsClient($baseUrl, $projectKey, $accessToken, $clientOptions);
     }

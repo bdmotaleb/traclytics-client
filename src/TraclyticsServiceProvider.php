@@ -28,6 +28,7 @@ class TraclyticsServiceProvider extends ServiceProvider
                     'userIdKey' => $config['user_id_key'],
                     'isHris' => $config['is_hris'],
                     'departmentKey' => $config['department_key'],
+                    'isEnabled' => $config['is_enabled'] ?? true,
                 ]
             );
 
@@ -71,6 +72,7 @@ class TraclyticsServiceProvider extends ServiceProvider
                         'userIdKey' => $config['user_id_key'] ?? 'id',
                         'isHris' => $config['is_hris'] ?? false,
                         'departmentKey' => $config['department_key'] ?? 'department',
+                        'isEnabled' => $config['is_enabled'] ?? true,
                     ]
                 );
 
