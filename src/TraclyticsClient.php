@@ -53,7 +53,7 @@ class TraclyticsClient
         $this->initialDelayMs = max(0, $options['initialDelayMs'] ?? 400);
         $this->backoffFactor  = max(1.0, $options['backoffFactor'] ?? 2.0);
         $this->maxDelayMs     = max(0, $options['maxDelayMs'] ?? 8000);
-        $this->timeoutMs      = max(1000, $options['timeoutMs'] ?? 10000);
+        $this->timeoutMs      = max(200, $options['timeoutMs'] ?? 2000);
         $this->userIdKey      = $options['userIdKey'] ?? 'user_id';
         $this->isHris         = $options['isHris'] ?? false;
         $this->departmentKey  = $options['departmentKey'] ?? 'department';
