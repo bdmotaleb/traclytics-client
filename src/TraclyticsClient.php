@@ -22,6 +22,8 @@ class TraclyticsClient
     private $timeoutMs;
     /** @var string */
     private $userIdKey;
+    /** @var string */
+    private $userNameKey;
     /** @var bool */
     private $isHris;
     /** @var string */
@@ -55,6 +57,7 @@ class TraclyticsClient
         $this->maxDelayMs     = max(0, $options['maxDelayMs'] ?? 8000);
         $this->timeoutMs      = max(200, $options['timeoutMs'] ?? 2000);
         $this->userIdKey      = $options['userIdKey'] ?? 'user_id';
+        $this->userNameKey    = $options['userNameKey'] ?? 'user_name';
         $this->isHris         = $options['isHris'] ?? false;
         $this->departmentKey  = $options['departmentKey'] ?? 'department';
         $this->isEnabled      = $options['isEnabled'] ?? true;
@@ -93,6 +96,7 @@ class TraclyticsClient
         $defaults = [
             'occurred_at' => gmdate('c', time() + 6 * 3600),
             'user_id'     => $this->detectUserId(),
+            'user_name'   => $this->detectUserName(),
             'platform'    => $this->detectPlatform(),
             'device'      => $this->detectDevice(),
             'browser'     => $this->detectBrowser(),
@@ -427,6 +431,61 @@ class TraclyticsClient
         }
 
         // No authenticated user found
+        return null;
+    }
+
+    /**
+     * Detect the authenticated user name
+     * Supports Laravel Auth, session-based auth, and custom implementations
+     * Returns null if no authenticated user is found
+     *
+     * @return string|null
+     */
+    private function detectUserName()
+    {
+        // Try Laravel Auth facade (if available)
+        if (class_exists('\Illuminate\Support\Facades\Auth')) {
+            try {
+                $user = \Illuminate\Support\Facades\Auth::user();
+                if ($user) {
+                    // Try configured user name key first
+                    if (isset($user->{$this->userNameKey})) {
+                        return (string) $user->{$this->userNameKey};
+                    }
+                    // Fallback to common name fields
+                    if (isset($user->name)) {
+                        return (string) $user->name;
+                    }
+                    if (isset($user->username)) {
+                        return (string) $user->username;
+                    }
+                    if (isset($user->user_name)) {
+                        return (string) $user->user_name;
+                    }
+                }
+            } catch (\Exception $e) {
+                // Silent fail, continue to other methods
+            }
+        }
+
+        // Try session-based user_name with configured key
+        if (session_status() === PHP_SESSION_ACTIVE || (session_status() === PHP_SESSION_NONE && @session_start())) {
+            if (isset($_SESSION[$this->userNameKey])) {
+                return (string) $_SESSION[$this->userNameKey];
+            }
+            // Fallback to common keys
+            if (isset($_SESSION['user_name'])) {
+                return (string) $_SESSION['user_name'];
+            }
+            if (isset($_SESSION['name'])) {
+                return (string) $_SESSION['name'];
+            }
+            if (isset($_SESSION['username'])) {
+                return (string) $_SESSION['username'];
+            }
+        }
+
+        // No authenticated user name found
         return null;
     }
 

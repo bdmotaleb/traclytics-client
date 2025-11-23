@@ -7,7 +7,7 @@ Lightweight PHP client for Traclytics API with Laravel support. Uses ext-curl. N
 - ✅ Laravel Service Provider with auto-discovery
 - ✅ Configurable via environment variables or config files
 - ✅ HRIS mode with automatic department tracking
-- ✅ Custom user ID key support
+- ✅ Custom user ID and user name key support
 - ✅ Automatic retry logic with exponential backoff
 - ✅ Works with Laravel and plain PHP
 
@@ -32,6 +32,7 @@ TRACLYTICS_PROJECT_KEY=your-project-key
 TRACLYTICS_ACCESS_TOKEN=your-access-token
 
 TRACLYTICS_USER_ID_KEY=user_id
+TRACLYTICS_USER_NAME_KEY=user_name
 TRACLYTICS_IS_HRIS=false
 TRACLYTICS_DEPARTMENT_KEY=department
 TRACLYTICS_IS_ENABLE=true
@@ -71,6 +72,7 @@ TRACLYTICS_ACCESS_TOKEN=your-access-token-here
 
 # Optional - defaults shown
 TRACLYTICS_USER_ID_KEY=user_id
+TRACLYTICS_USER_NAME_KEY=user_name
 TRACLYTICS_IS_HRIS=false
 TRACLYTICS_DEPARTMENT_KEY=department
 TRACLYTICS_IS_ENABLE=true
@@ -90,6 +92,7 @@ Traclytics::configure([
     // Optional: override defaults via clientOptions
     // 'clientOptions' => [
     //     'userIdKey' => 'user_id',
+    //     'userNameKey' => 'user_name',
     //     'isHris' => false,
     //     'departmentKey' => 'department',
     // ]
@@ -157,6 +160,7 @@ $client = new TraclyticsClient(
     'your-access-token',
     [
         'userIdKey' => 'user_id',
+        'userNameKey' => 'user_name',
         'isHris' => false,
         'departmentKey' => 'department',
     ]
@@ -205,6 +209,18 @@ TRACLYTICS_USER_ID_KEY=employee_id
 - `'employee_id'` - For HR/employee systems
 - `'emp_no'` - Custom employee number
 
+#### Custom User Name Field
+If your user model uses a different field name for the user's name:
+```env
+TRACLYTICS_USER_NAME_KEY=full_name
+```
+
+**Examples:**
+- `'user_name'` - Standard user name field (default)
+- `'name'` - Common name field
+- `'full_name'` - Full name field
+- `'username'` - Username field
+
 #### HRIS Mode (HR Applications)
 HRIS mode determines how department information is handled:
 
@@ -234,6 +250,7 @@ TRACLYTICS_TIMEOUT_MS=10000
 
 **Default Values:**
 - `userIdKey`: `'user_id'`
+- `userNameKey`: `'user_name'`
 - `isHris`: `false` (client-side department tracking enabled)
 - `departmentKey`: `'department'`
 - `isEnabled`: `true` (tracking enabled by default)
@@ -243,7 +260,8 @@ TRACLYTICS_TIMEOUT_MS=10000
 ## What Gets Tracked Automatically?
 
 The client automatically includes:
-- ✅ **User ID** - Detected from Laravel Auth or session (configurable via `user_id_key`)
+- ✅ **User ID** - Detected from Laravel Auth or session (configurable via `userIdKey`)
+- ✅ **User Name** - Detected from Laravel Auth or session (configurable via `userNameKey`)
 - ✅ **Platform** - Operating system (Windows, MacOS, Linux, Android, iOS)
 - ✅ **Device** - Device type (Desktop, Mobile, Tablet)
 - ✅ **Browser** - Browser name (Chrome, Firefox, Safari, Edge, etc.)

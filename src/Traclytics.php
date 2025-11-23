@@ -26,6 +26,9 @@ class Traclytics
         if (!isset($clientOptions['userIdKey'])) {
             $clientOptions['userIdKey'] = getenv('TRACLYTICS_USER_ID_KEY') ?: 'user_id';
         }
+        if (!isset($clientOptions['userNameKey'])) {
+            $clientOptions['userNameKey'] = getenv('TRACLYTICS_USER_NAME_KEY') ?: 'user_name';
+        }
         if (!isset($clientOptions['isHris'])) {
             $isHrisEnv = getenv('TRACLYTICS_IS_HRIS');
             $clientOptions['isHris'] = $isHrisEnv !== false ? filter_var($isHrisEnv, FILTER_VALIDATE_BOOLEAN) : false;
