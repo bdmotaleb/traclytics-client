@@ -131,18 +131,99 @@ class TraclyticsClient
     {
         $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
+        if (empty($userAgent)) {
+            return 'Unknown';
+        }
+
+        // iOS's devices (check before Mac since iPad/iPhone can contain Mac in UA)
+        if (stripos($userAgent, 'iPhone') !== false || stripos($userAgent, 'iPad') !== false || stripos($userAgent, 'iPod') !== false) {
+            return 'iOS';
+        }
+
+        // Android (check before Linux)
+        if (stripos($userAgent, 'Android') !== false) {
+            return 'Android';
+        }
+
+        // Windows (check various versions)
+        if (stripos($userAgent, 'Windows NT 10.0') !== false || stripos($userAgent, 'Windows 10') !== false) {
+            return 'Windows';
+        }
+        if (stripos($userAgent, 'Windows NT 6.3') !== false || stripos($userAgent, 'Windows 8.1') !== false) {
+            return 'Windows';
+        }
+        if (stripos($userAgent, 'Windows NT 6.2') !== false || stripos($userAgent, 'Windows 8') !== false) {
+            return 'Windows';
+        }
+        if (stripos($userAgent, 'Windows NT 6.1') !== false || stripos($userAgent, 'Windows 7') !== false) {
+            return 'Windows';
+        }
+        if (stripos($userAgent, 'Windows NT 6.0') !== false || stripos($userAgent, 'Windows Vista') !== false) {
+            return 'Windows';
+        }
+        if (stripos($userAgent, 'Windows NT 5.1') !== false || stripos($userAgent, 'Windows XP') !== false) {
+            return 'Windows';
+        }
         if (stripos($userAgent, 'Windows') !== false) {
             return 'Windows';
-        } elseif (stripos($userAgent, 'Mac') !== false || stripos($userAgent, 'Macintosh') !== false) {
+        }
+
+        // macOS (check various versions and identifiers)
+        if (stripos($userAgent, 'Mac OS X') !== false || stripos($userAgent, 'Macintosh') !== false || stripos($userAgent, 'Mac_PowerPC') !== false) {
             return 'MacOS';
-        } elseif (stripos($userAgent, 'Linux') !== false) {
+        }
+        if (stripos($userAgent, 'Mac') !== false && stripos($userAgent, 'iPhone') === false && stripos($userAgent, 'iPad') === false) {
+            return 'MacOS';
+        }
+
+        // Linux distributions
+        if (stripos($userAgent, 'Ubuntu') !== false) {
             return 'Linux';
-        } elseif (stripos($userAgent, 'Android') !== false) {
-            return 'Android';
-        } elseif (stripos($userAgent, 'iPhone') !== false || stripos($userAgent, 'iPad') !== false) {
-            return 'iOS';
-        } elseif (stripos($userAgent, 'PostmanRuntime') !== false) {
+        }
+        if (stripos($userAgent, 'Debian') !== false) {
+            return 'Linux';
+        }
+        if (stripos($userAgent, 'Fedora') !== false) {
+            return 'Linux';
+        }
+        if (stripos($userAgent, 'Linux') !== false) {
+            return 'Linux';
+        }
+
+        // Chrome OS
+        if (stripos($userAgent, 'CrOS') !== false || stripos($userAgent, 'Chromium OS') !== false) {
+            return 'Chrome OS';
+        }
+
+        // BlackBerry
+        if (stripos($userAgent, 'BlackBerry') !== false || stripos($userAgent, 'BB10') !== false) {
+            return 'BlackBerry';
+        }
+
+        // Windows Phone
+        if (stripos($userAgent, 'Windows Phone') !== false) {
+            return 'Windows Phone';
+        }
+
+        // Symbian
+        if (stripos($userAgent, 'Symbian') !== false) {
+            return 'Symbian';
+        }
+
+        // Postman and API tools
+        if (stripos($userAgent, 'PostmanRuntime') !== false || stripos($userAgent, 'Postman') !== false) {
             return 'Postman';
+        }
+        if (stripos($userAgent, 'curl') !== false) {
+            return 'cURL';
+        }
+        if (stripos($userAgent, 'Wget') !== false) {
+            return 'Wget';
+        }
+
+        // Bot/Crawler detection (optional - you might want to handle these differently)
+        if (stripos($userAgent, 'bot') !== false || stripos($userAgent, 'crawler') !== false || stripos($userAgent, 'spider') !== false) {
+            return 'Bot';
         }
 
         return 'Unknown';
@@ -168,25 +249,129 @@ class TraclyticsClient
 
     /**
      * Detect the browser from the User-Agent
+     * Order matters: check more specific browsers first
      */
     private function detectBrowser(): string
     {
         $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
-        if (stripos($userAgent, 'Edg') !== false || stripos($userAgent, 'Edge') !== false) {
-            return 'Edge';
-        } elseif (stripos($userAgent, 'Chrome') !== false && stripos($userAgent, 'Edg') === false) {
-            return 'Chrome';
-        } elseif (stripos($userAgent, 'Safari') !== false && stripos($userAgent, 'Chrome') === false) {
-            return 'Safari';
-        } elseif (stripos($userAgent, 'Firefox') !== false) {
-            return 'Firefox';
-        } elseif (stripos($userAgent, 'MSIE') !== false || stripos($userAgent, 'Trident') !== false) {
-            return 'Internet Explorer';
-        } elseif (stripos($userAgent, 'Opera') !== false || stripos($userAgent, 'OPR') !== false) {
-            return 'Opera';
-        } elseif (stripos($userAgent, 'PostmanRuntime') !== false) {
+        if (empty($userAgent)) {
+            return 'Unknown';
+        }
+
+        // Postman and API tools (check first)
+        if (stripos($userAgent, 'PostmanRuntime') !== false || stripos($userAgent, 'Postman') !== false) {
             return 'Postman';
+        }
+        if (stripos($userAgent, 'curl') !== false) {
+            return 'cURL';
+        }
+        if (stripos($userAgent, 'Wget') !== false) {
+            return 'Wget';
+        }
+
+        // Edge (Chromium-based) - check before Chrome since Edge UA contains Chrome
+        if (stripos($userAgent, 'Edg/') !== false || stripos($userAgent, 'EdgA') !== false || stripos($userAgent, 'EdgiOS') !== false) {
+            return 'Edge';
+        }
+        // Legacy Edge (EdgeHTML)
+        if (stripos($userAgent, 'Edge') !== false && stripos($userAgent, 'Chrome') === false) {
+            return 'Edge';
+        }
+
+        // Opera - check before Chrome since Opera UA contains Chrome
+        if (stripos($userAgent, 'OPR/') !== false || stripos($userAgent, 'Opera/') !== false) {
+            return 'Opera';
+        }
+        if (stripos($userAgent, 'Opera') !== false) {
+            return 'Opera';
+        }
+
+        // Vivaldi - check before Chrome since Vivaldi UA contains Chrome
+        if (stripos($userAgent, 'Vivaldi') !== false) {
+            return 'Vivaldi';
+        }
+
+        // Brave - check before Chrome since Brave UA contains Chrome
+        if (stripos($userAgent, 'Brave') !== false) {
+            return 'Brave';
+        }
+
+        // Samsung Internet - check before Chrome since Samsung UA contains Chrome
+        if (stripos($userAgent, 'SamsungBrowser') !== false) {
+            return 'Samsung Internet';
+        }
+
+        // Yandex Browser - check before Chrome since Yandex UA contains Chrome
+        if (stripos($userAgent, 'YaBrowser') !== false) {
+            return 'Yandex Browser';
+        }
+
+        // UC Browser - check before Chrome since UC Browser UA may contain Chrome
+        if (stripos($userAgent, 'UCBrowser') !== false || stripos($userAgent, 'UC Browser') !== false) {
+            return 'UC Browser';
+        }
+
+        // Chrome (check after Edge/Opera/Vivaldi/Brave since they contain Chrome in UA)
+        if (stripos($userAgent, 'Chrome') !== false && stripos($userAgent, 'Edg') === false &&
+            stripos($userAgent, 'OPR') === false && stripos($userAgent, 'Opera') === false &&
+            stripos($userAgent, 'Vivaldi') === false && stripos($userAgent, 'Brave') === false &&
+            stripos($userAgent, 'SamsungBrowser') === false && stripos($userAgent, 'YaBrowser') === false &&
+            stripos($userAgent, 'UCBrowser') === false) {
+            return 'Chrome';
+        }
+
+        // Firefox (check various versions)
+        if (stripos($userAgent, 'Firefox') !== false || stripos($userAgent, 'FxiOS') !== false) {
+            return 'Firefox';
+        }
+
+        // Safari (check after Chrome since Safari UA may contain Chrome on iOS)
+        if (stripos($userAgent, 'Safari') !== false && stripos($userAgent, 'Chrome') === false &&
+            stripos($userAgent, 'Chromium') === false) {
+            return 'Safari';
+        }
+
+        // Internet Explorer (legacy)
+        if (stripos($userAgent, 'MSIE') !== false || stripos($userAgent, 'Trident/') !== false) {
+            return 'Internet Explorer';
+        }
+
+        // Internet Explorer Mobile
+        if (stripos($userAgent, 'IEMobile') !== false) {
+            return 'Internet Explorer Mobile';
+        }
+
+        // Maxthon
+        if (stripos($userAgent, 'Maxthon') !== false) {
+            return 'Maxthon';
+        }
+
+        // QQ Browser
+        if (stripos($userAgent, 'QQBrowser') !== false || stripos($userAgent, 'QQ/') !== false) {
+            return 'QQ Browser';
+        }
+
+        // Baidu Browser
+        if (stripos($userAgent, 'Baidu') !== false && stripos($userAgent, 'Baiduspider') === false) {
+            return 'Baidu Browser';
+        }
+
+        // 360 Browser
+        if (stripos($userAgent, '360SE') !== false || stripos($userAgent, '360EE') !== false) {
+            return '360 Browser';
+        }
+
+        // Chromium (check after Chrome-based browsers)
+        if (stripos($userAgent, 'Chromium') !== false) {
+            return 'Chromium';
+        }
+
+        // Bot/Crawler detection
+        if (stripos($userAgent, 'bot') !== false || stripos($userAgent, 'crawler') !== false ||
+            stripos($userAgent, 'spider') !== false || stripos($userAgent, 'Googlebot') !== false ||
+            stripos($userAgent, 'Bingbot') !== false || stripos($userAgent, 'Slurp') !== false) {
+            return 'Bot';
         }
 
         return 'Unknown';
@@ -278,8 +463,8 @@ class TraclyticsClient
     }
 
     /**
-     * @param string $url
-     * @param string $method
+     * @param string      $url
+     * @param string      $method
      * @param string|null $body
      * @return array<string, mixed>
      */
