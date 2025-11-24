@@ -383,7 +383,7 @@ class TraclyticsClient
 
     /**
      * Detect the authenticated user ID
-     * Supports Laravel Auth, session-based auth, and custom implementations
+     * Supports Laravel Auth, session helper function, session-based auth, and custom implementations
      * Returns null if no authenticated user is found
      *
      * @return string|null
@@ -413,6 +413,31 @@ class TraclyticsClient
             }
         }
 
+        // Try session helper function (if available) - e.g., session('user_id')
+        if (function_exists('session')) {
+            try {
+                $userId = session($this->userIdKey);
+                if ($userId !== null && $userId !== '') {
+                    return (string) $userId;
+                }
+                // Fallback to common keys
+                $userId = session('user_id');
+                if ($userId !== null && $userId !== '') {
+                    return (string) $userId;
+                }
+                $userId = session('id');
+                if ($userId !== null && $userId !== '') {
+                    return (string) $userId;
+                }
+                $userId = session('userId');
+                if ($userId !== null && $userId !== '') {
+                    return (string) $userId;
+                }
+            } catch (\Exception $e) {
+                // Silent fail, continue to other methods
+            }
+        }
+
         // Try session-based user_id with configured key
         if (session_status() === PHP_SESSION_ACTIVE || (session_status() === PHP_SESSION_NONE && @session_start())) {
             if (isset($_SESSION[$this->userIdKey])) {
@@ -436,7 +461,7 @@ class TraclyticsClient
 
     /**
      * Detect the authenticated user name
-     * Supports Laravel Auth, session-based auth, and custom implementations
+     * Supports Laravel Auth, session helper function, session-based auth, and custom implementations
      * Returns null if no authenticated user is found
      *
      * @return string|null
@@ -462,6 +487,31 @@ class TraclyticsClient
                     if (isset($user->user_name)) {
                         return (string) $user->user_name;
                     }
+                }
+            } catch (\Exception $e) {
+                // Silent fail, continue to other methods
+            }
+        }
+
+        // Try session helper function (if available) - e.g., session('user_name')
+        if (function_exists('session')) {
+            try {
+                $userName = session($this->userNameKey);
+                if ($userName !== null && $userName !== '') {
+                    return (string) $userName;
+                }
+                // Fallback to common keys
+                $userName = session('user_name');
+                if ($userName !== null && $userName !== '') {
+                    return (string) $userName;
+                }
+                $userName = session('name');
+                if ($userName !== null && $userName !== '') {
+                    return (string) $userName;
+                }
+                $userName = session('username');
+                if ($userName !== null && $userName !== '') {
+                    return (string) $userName;
                 }
             } catch (\Exception $e) {
                 // Silent fail, continue to other methods
@@ -550,7 +600,7 @@ class TraclyticsClient
                 CURLOPT_FOLLOWLOCATION => false,
                 CURLOPT_SSL_VERIFYPEER => true,
                 CURLOPT_SSL_VERIFYHOST => 2,
-                CURLOPT_USERAGENT      => 'TraclyticsClient/1.3.0',
+                CURLOPT_USERAGENT      => 'TraclyticsClient/1.4.0',
             ]);
             if ($body !== null) {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
