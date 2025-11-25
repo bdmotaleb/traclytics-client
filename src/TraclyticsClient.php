@@ -136,7 +136,7 @@ class TraclyticsClient
         $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
         if (empty($userAgent)) {
-            return 'Unknown';
+            return 'Others';
         }
 
         // iOS's devices (check before Mac since iPad/iPhone can contain Mac in UA)
@@ -230,7 +230,7 @@ class TraclyticsClient
             return 'Bot';
         }
 
-        return 'Unknown';
+        return 'Others';
     }
 
     /**
@@ -260,7 +260,7 @@ class TraclyticsClient
         $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
         if (empty($userAgent)) {
-            return 'Unknown';
+            return 'Others';
         }
 
         // Postman and API tools (check first)
@@ -378,7 +378,7 @@ class TraclyticsClient
             return 'Bot';
         }
 
-        return 'Unknown';
+        return 'Others';
     }
 
     /**
