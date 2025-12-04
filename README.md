@@ -218,7 +218,6 @@ TRACLYTICS_USER_NAME_KEY=name
 **Examples:**
 - `'user_name'` - Standard user name field (default)
 - `'name'` - Common name field
-- `'name'` - Full name field
 - `'username'` - Username field
 
 #### HRIS Mode (HR Applications)
