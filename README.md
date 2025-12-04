@@ -212,13 +212,13 @@ TRACLYTICS_USER_ID_KEY=employee_id
 #### Custom User Name Field
 If your user model uses a different field name for the user's name:
 ```env
-TRACLYTICS_USER_NAME_KEY=full_name
+TRACLYTICS_USER_NAME_KEY=name
 ```
 
 **Examples:**
 - `'user_name'` - Standard user name field (default)
 - `'name'` - Common name field
-- `'full_name'` - Full name field
+- `'name'` - Full name field
 - `'username'` - Username field
 
 #### HRIS Mode (HR Applications)
